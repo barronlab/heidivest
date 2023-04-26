@@ -3,12 +3,7 @@ Code, data, etc. for divest paper!!
 
 Note: As of 4/11/22 Code runs with R Studio Version 2023.03.0+386 and R 4.2.3 (2023-03-15) -- "Shortstop Beagle" on Mac Computers.
 
-
-12_Month_Enrollment.csv - IPEDS enrollment data, not used by Rmd code.
-
 blanks.xlsx
-
-Directory_Information.csv - Master IPEDS data file, not used by Rmd code
 
 Divested Institutions Spring 2022.csv
 

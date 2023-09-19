@@ -1,7 +1,7 @@
 # DivestPaper
-Code, data, etc. for divest paper!!
+Code, data, etc. for Barron et. al HEI Divestment research
 
-Note: As of 4/11/22 Code runs with R Studio Version 2023.03.0+386 and R 4.2.3 (2023-03-15) -- "Shortstop Beagle" on Mac Computers.
+Note: As of 9/19/23 Code runs with R Studio Version 2023.06.2+561 and R  4.3.1 -- "Beagle Scouts" on Mac Computers.
 
 blanks.xlsx
 
@@ -13,7 +13,7 @@ Endowment dependency reported vs. calculated.xlsx
 
 f_f1a(public) 2020.csv - IPEDS public institution data
 
-f_f2(private) 2017.csv - IPEDS private institution data
+f_f2(private) 2020.csv - IPEDS private institution data
 
 peerlist.csv - Used to compile the IPEDS data
 

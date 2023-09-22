@@ -2,7 +2,7 @@
 ---
 title: "Divestment Analysis for Barron et al. 2023 Elementa"
 authors: "Rachel Venator, Jane Andrews, and Junwen Ding, Alex Barron advising"
-date: "2023-09-20"
+date: "2023-09-22"
 output: html_document
 ---
 ## Setup
@@ -22,6 +22,7 @@ library(ggrepel)
 library(ggpubr)
 library(lmtest)
 library(stargazer)
+library(showtext)
 
 ```
  
@@ -36,9 +37,9 @@ f_f1a_datax <- read.csv("f_f1a(public) 2020.csv")
 f_f2_datax <- read.csv("f_f2(private) 2020.csv")
 
 # The "divested" and "rejected" datasets were created based off of data on fossil fuel divestment decisions gathered by Smith College. 
-divestedx <- read.csv ("Divested Institutions Spring 2023.csv")
+divestedx <- read.csv ("Divested Institutions Spring 2023_final.csv")
 rejectedx <- read.csv("Rejected Institutions Spring 2022.csv")
-rejected_detailsx <- read.csv("Rejections_data Spring 2022.csv")
+rejected_detailsx <- read.csv("Rejections_data Spring 2022_final.csv")
 ```
 
 ```{r rename columns}
@@ -182,7 +183,7 @@ identical(count(ed_data_null), count(merged_data_2020)-count(reversed_data))
 div_data <- merged_data[which(merged_data$ACAD_YEAR == 2020 & merged_data$Divested.== "Yes"),]
 ```
 ```{r diff_div}
-#div_data losing 8 schools from divestedx - this represents 2 year colleges, one closed school (GMC) and 2 campuses that do not report individual endowments (UW)
+#div_data losing 6 schools from divestedx - this represents 2 year colleges and one closed school (GMC) 
 print("These schools are in mannually compiled divestedx but not in div_data")
 diff_div<-setdiff(divestedx$School.Name, div_data$School.Name)
 diff_div
@@ -730,9 +731,7 @@ bubbledatapost2018 <- bubble_data %>%
 # Graph 2018-2022
 bubble8 <- ggplot(bubbledatapost2018) + 
   geom_point(alpha=0.7, aes(x=35.64197926,y=2.6, size=31.201686000),colour="#7fff00") + 
-  geom_text(label="Yale University", colour = "black", aes(x=33, y=3.65, , fontface = "plain"), 
-            size = 8.2/.pt, point.padding = 0.6, box.padding = .3, seed = 65,  nudge_y =-0.6) + 
-  geom_point(alpha = 0.75, aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure,
+geom_point(alpha = 0.75, aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure,
                                size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment)) +
   scale_color_manual(values=c("#E69F00","#7fff00", "#00994C")) + theme_bw() + 
   labs(x="Endowment dependence", y= "Fossil fuel exposure", size = "Value of endowment (billions USD)", 
@@ -745,9 +744,12 @@ bubble8 <- ggplot(bubbledatapost2018) +
                   size = 8/.pt, max.overlaps=20, point.padding = 0.6, box.padding = .3, seed = 65, nudge_y =-0.6) + 
   theme_bw(base_size = 11)+ 
   theme(plot.title=element_text(hjust=0.6), legend.position = "none", legend.box.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"),
-  legend.box.background = element_rect(color="black", size=0.5))                                    
+legend.box.background = element_rect(color="black", size=0.5))                                    
 
 #Move Yale Fossil Fuel Exposure from 0 to 2.6 in 2021, add geom_point. Divestment announcement impacted the holdings 
+showtext_auto()
+bubble8 + annotate(geom="text", , x=33, y=2.9, label="Yale University",family = "Serif", cex=3)
+
 bubble8
 
 ggsave("Bubble Chart Post 2018.png", bubble8, width = 9, height = 6)
@@ -774,8 +776,8 @@ ggsave(filename =  "Barron23Fig4_DivRisks.jpeg", aligned_div_risk, height = 5, w
 ### Highlight: Only XX of YY divesting schools reported fossil fuel exposure. 
 ```{r highlight}
 colSums(!is.na(bubble_data))
-print(paste0("Note that only 107  of 134 divesting schools reported fossil fuel exposure."))
-X<- 107/134
+print(paste0("Note that only 107  of 136 divesting schools reported fossil fuel exposure."))
+X<- 107/136
 print(paste0("For the subset of schools that reported fossil fuel share of endowment (",round(X*100, 1),"%)"))
 ```
 
@@ -951,15 +953,15 @@ for (i in ed_data$UNITID){
 ### Unused Histogram of endowment values
 ```{r hist3, echo=FALSE, warning=FALSE}
 # Convert variable type
-hist_data$Bins <- as.numeric(hist_data$Bins)
+#hist_data$Bins <- as.numeric(hist_data$Bins)
 
 # Convert to percent
-hist_data$Binspercent <- hist_data$Bins * 100
+#hist_data$Binspercent <- hist_data$Bins * 100
 
 # Graph
-value_graph <- ggplot(hist_data, aes(hist_data$Binspercent)) + geom_col(aes(y=hist_data$Endowment_values)) + geom_vline(xintercept = 10) + geom_vline(xintercept = smith_ed_1 *100) + ggtitle("All institutions - endowment value by endowment dependency") + labs(x="Endowment dependency (%)", y="Value of endowments") + theme_bw() + theme(axis.text.x= element_text(hjust=1), plot.title = element_text(hjust=0.5))
+#value_graph <- ggplot(hist_data, aes(hist_data$Binspercent)) + geom_col(aes(y=hist_data$Endowment_values)) + geom_vline(xintercept = 10) + geom_vline(xintercept = smith_ed_1 *100) + ggtitle("All institutions - endowment value by endowment dependency") + labs(x="Endowment dependency (%)", y="Value of endowments") + theme_bw() + theme(axis.text.x= element_text(hjust=1), plot.title = element_text(hjust=0.5))
 
-value_graph
+#value_graph
 ```
 ### SI Figure 3: Endowment size of divested institutions 
 ```{r endowsize}
@@ -1154,11 +1156,13 @@ hist5
 
 ### Logit 2012-2022
 ```{r}
+#Endowment size as predictor
 es_logit <- glm(Divested ~ Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, data = ed_test, family = "binomial")
 summary(es_logit)
 ```
 
 ```{r ed_logit}
+#For use in Shifts in ED
 ed_logit <- glm(Divested ~ Endowment_dependency, data = ed_test, family = "binomial")
 summary(ed_logit)
 
@@ -1181,6 +1185,7 @@ ggplot(ed_test, aes(x=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.y
 ```
 
 ```{r ed_es_logit}
+#adding Endowment size to the model with ED
 ed_es_logit <- glm(Divested ~ Endowment_dependency+Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, data = ed_test, family = "binomial")
 summary(ed_es_logit)
 ```

@@ -22,8 +22,6 @@ library(ggrepel)
 library(ggpubr)
 library(lmtest)
 library(stargazer)
-#install.packages("showtext")
-library(showtext)
 
 ```
  
@@ -746,19 +744,17 @@ geom_point(alpha = 0.75, aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure,
                   size = 8/.pt, max.overlaps=20, point.padding = 0.6, box.padding = .3, seed = 65, nudge_y =-0.6) + 
   theme_bw(base_size = 11)+ 
   theme(plot.title=element_text(hjust=0.6), legend.position = "none", legend.box.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"),
-legend.box.background = element_rect(color="black", size=0.5))                                    
+legend.box.background = element_rect(color="black", size=0.5))
+
 
 #Move Yale Fossil Fuel Exposure from 0 to 2.6 in 2021, add geom_point. Divestment announcement impacted the holdings 
-#For Yale University to show in unbolded fontface, please install.packages("showtext") and run the next two lines. Running the next two lines with the whole rmd will repel all text and label size to size 3.  
-#install.packages("showtext")
-library(showtext)
-showtext_auto()
-bubble8 <- bubble8 + annotate(geom="text", x=33, y=2.9, label="Yale University",family = "Serif", cex=3)
+#For Yale University to show in unbolded fontface
+
+bubble8 <- bubble8 + annotate(geom="text", x=33, y=2.9, label="Yale University",cex=2.9)
 
 bubble8
 
-ggsave("Bubble Chart Post 2018.png", bubble8, width = 9, height = 6)
-
+ggsave("Bubble Chart Post 2018_no ST annotate_no family_2.5.png", bubble8, width = 9, height = 6, units = "in", dpi = 600)
 
 #bubbledatapost_post2019<- bubble_data %>% 
 #  filter(substr(Quarter, 0, 4) == "2019" | substr(Quarter, 0, 4) == "2020" | substr(Quarter, 0, 4) == "2021" | substr(Quarter, 0, 4) == "2022") %>%

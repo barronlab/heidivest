@@ -599,7 +599,8 @@ line
 # Line graph for divestment/rejections ($)
 line2 = ggplot(div_rej_data ,aes(div_rej_data$Quarters)) + geom_line(aes(x=div_rej_data$Quarters, y=div_rej_data$Amount.Divested, color="Divested"), size = 1.5, group = 1) + geom_line(aes(x= div_rej_data$Quarters, y=div_rej_data$Amount.Rejected, color="Rejected"), size = 1.5, group = 1) +
 geom_line(aes(x=div_rej_data$Quarters, y = div_rej_data$Amount.Fully.Divested, color="Fully divested"), size = 1.5, group = 1) + labs(x="Year", y= "Cumulative endowment value (Billions USD)", color="Divested/rejected") + theme_bw() + theme(axis.text.x = element_text(hjust=1), plot.title=element_text(hjust=0.5)) + ylim(0, 255) + scale_color_manual(values=c("indianred1", "royalblue3", "black")) + scale_x_discrete(breaks=c("2013 Q1", "2014 Q1", "2015 Q1", "2016 Q1", "2017 Q1", "2018 Q1", "2019 Q1", "2020 Q1", "2021 Q1","2022 Q1","2023 Q1"), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021","2022","2023"))+
-  theme(legend.position = c(0.89, 0.15), legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black"))
+  theme(legend.position = c(0.89, 0.15), legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black")) +     theme(axis.title=element_text(size=8))
+
 
 line2
 
@@ -747,8 +748,9 @@ geom_point(alpha = 0.75, aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure,
 legend.box.background = element_rect(color="black", size=0.5))                                    
 
 #Move Yale Fossil Fuel Exposure from 0 to 2.6 in 2021, add geom_point. Divestment announcement impacted the holdings 
-showtext_auto()
-bubble8 + annotate(geom="text", , x=33, y=2.9, label="Yale University",family = "Serif", cex=3)
+#For Yale University to show in unbolded fontface, please install.packages("showtext") and run the next two lines. Running the next two lines with the whole rmd will repel all text and label size to size 3.  
+#showtext_auto()
+#bubble8 + annotate(geom="text", , x=33, y=2.9, label="Yale University",family = "Serif", cex=3)
 
 bubble8
 
@@ -973,11 +975,11 @@ div_data2<-div_data2%>%
 endowsize = ggplot(div_data2 ,aes(x = ContinuousQuarter, y = Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment) ,alpha = 0.75)+ 
  scale_x_continuous(breaks=c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022,2023), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022","2023")) + 
   geom_point() + scale_shape_manual(values = c(4, 3, 21, 8, 7)) + labs(x="Year", y= "Value of Endowment (Billions USD)") + ggtitle("Endowment Size of Divested Institutions") + theme_bw() + theme(plot.title = element_text(hjust=0.5)) +
-  scale_color_manual(values=c("#E69F00","#F0E442","#00994C","#7fff00"))+geom_text_repel(data = div_data2, colour = "black", aes(x=ContinuousQuarter, y=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, label=label_data_3),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5))
+  scale_color_manual(values=c("#E69F00","#F0E442","#00994C","#7fff00"))+geom_text_repel(data = div_data2, colour = "black", aes(x=ContinuousQuarter, y=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, label=label_data_3),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5)) + theme(plot.title = element_text(hjust=0.5), legend.position = c(0.15, 0.78),legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black"))+ labs(color='Type of divestment')
 
 endowsize
 
-ggsave("SI 3nEndowment Size of divested institution.png", endowsize, width = 8, height = 4)
+ggsave("Barron23FigSI3_EndowmentSizeDivested.jpeg", endowsize, width = 8, height = 4, units = "in", dpi = 600)
 
 ```
 
@@ -1008,18 +1010,18 @@ ed_data_copy_post2017_full <- ed_data_copy %>%
 
 ### 2012-2017 vs 2018-2022 Endowment Size vs divestment decision (fully divested vs rejected) 
 ```{r ES_pre2017_box_full and ES_post2017_box_full}
-ES_pre2017_box_full <-  ggplot(ed_data_copy_pre2017_full) + geom_boxplot(aes(x=Divested..x, y=Value.of.endowment.assets.at.the.end.of.the.fiscal.year)) + geom_jitter(aes(x=Divested..x, y=Value.of.endowment.assets.at.the.end.of.the.fiscal.year),shape=16, position=position_jitter(0.2)) + theme_bw() +ggtitle("2012 - 2017") + labs(x="Divestment Decision (Yes = Fully divested, No = Rejected)", y= "Endowment Size (Billions USD)") + theme(plot.title=element_text(hjust=0.5))
+ES_pre2017_box_full <-  ggplot(ed_data_copy_pre2017_full) + geom_boxplot(aes(x=Divested..x, y=Value.of.endowment.assets.at.the.end.of.the.fiscal.year)) + geom_jitter(aes(x=Divested..x, y=Value.of.endowment.assets.at.the.end.of.the.fiscal.year),shape=16, position=position_jitter(0.2)) + theme_bw() +ggtitle("2012 - 2017") + labs(x="Divestment decision (Yes = Fully divested, No = Rejected)", y= "Endowment size (Billions USD)") + theme(plot.title=element_text(hjust=0.5))
 ES_pre2017_box_full
 
-ES_post2017_box_full <-  ggplot(ed_data_copy_post2017_full) + geom_boxplot(aes(x=Divested..x, y=Value.of.endowment.assets.at.the.end.of.the.fiscal.year)) + geom_jitter(aes(x=Divested..x, y=Value.of.endowment.assets.at.the.end.of.the.fiscal.year),shape=16, position=position_jitter(0.2)) + theme_bw() +ggtitle("2018 - 2022") + labs(x="Divestment Decision (Yes = Fully divested, No = Rejected)", y= "Endowment Size (Billions USD)") + theme(plot.title=element_text(hjust=0.5))
+ES_post2017_box_full <-  ggplot(ed_data_copy_post2017_full) + geom_boxplot(aes(x=Divested..x, y=Value.of.endowment.assets.at.the.end.of.the.fiscal.year)) + geom_jitter(aes(x=Divested..x, y=Value.of.endowment.assets.at.the.end.of.the.fiscal.year),shape=16, position=position_jitter(0.2)) + theme_bw() +ggtitle("2018 - 2022") + labs(x="Divestment decision (Yes = Fully divested, No = Rejected)", y= "Endowment size (Billions USD)") + theme(plot.title=element_text(hjust=0.5))
 ES_post2017_box_full
 ```
 ### 2012-2018 vs 2019-2022 Endowment Dependency vs divestment decision (fully divested vs rejected) 
 ```{r ED_pre2017_box_full and ED_post2017_box_full}
-ED_pre2017_box_full <-  ggplot(ed_data_copy_pre2017_full) + geom_boxplot(aes(x=Divested..x, y=Endowment_dependency)) + geom_jitter(aes(x=Divested..x, y=Endowment_dependency),shape=16, position=position_jitter(0.2)) + theme_bw() +ggtitle("2012 - 2017") + labs(x="Divestment Decision (Yes = Fully divested, No = Rejected)", y= "Endowment dependency") + theme(plot.title=element_text(hjust=0.5))
+ED_pre2017_box_full <-  ggplot(ed_data_copy_pre2017_full) + geom_boxplot(aes(x=Divested..x, y=Endowment_dependency)) + geom_jitter(aes(x=Divested..x, y=Endowment_dependency),shape=16, position=position_jitter(0.2)) + theme_bw() +ggtitle("2012 - 2017") + labs(x="Divestment decision (Yes = Fully divested, No = Rejected)", y= "Endowment dependency") + theme(plot.title=element_text(hjust=0.5))
 ED_pre2017_box_full
 
-ED_post2017_box_full <-  ggplot(ed_data_copy_post2017_full) + geom_boxplot(aes(x=Divested..x, y=Endowment_dependency)) + geom_jitter(aes(x=Divested..x, y=Endowment_dependency),shape=16, position=position_jitter(0.2)) + theme_bw() +ggtitle("2018 - 2022") + labs(x="Divestment Decision (Yes = Fully Divested, No = Rejected)", y= "Endowment dependency") + theme(plot.title=element_text(hjust=0.5))
+ED_post2017_box_full <-  ggplot(ed_data_copy_post2017_full) + geom_boxplot(aes(x=Divested..x, y=Endowment_dependency)) + geom_jitter(aes(x=Divested..x, y=Endowment_dependency),shape=16, position=position_jitter(0.2)) + theme_bw() +ggtitle("2018 - 2022") + labs(x="Divestment decision (Yes = Fully divested, No = Rejected)", y= "Endowment dependency") + theme(plot.title=element_text(hjust=0.5))
 ED_post2017_box_full
 ```
 ### Combined 2012-2017 vs 2018-2022, ED vs Div decision and ES vs Div decision
@@ -1036,6 +1038,8 @@ fullpre2017_box
 ggsave("Endowment Dependency and endowment size box plot 2012-2018.png", pre2017_box, width = 10, height = 4)
 ggsave("Endowment Dependency and endowment size box plot 2018-2022.png", post2017_box, width = 10, height = 4)
 ggsave("Endowment Dependency and endowment size box plot 2018-2022.png", fullpre2017_box, width = 10, height = 4)
+ggsave("Barron23FigSI2_EndowmentSizeDivested.jpeg", fullpre2017_box, width = 10, height = 4, units = "in", dpi = 600)
+
 ```
 
 ## Testing 
@@ -1101,15 +1105,19 @@ hist2 <- ggplot(div_data) + geom_histogram(aes(x=Fossil.Fuel.Exposure)) + theme_
 hist2
 ```
 
-### Relationship between endowment size and endowment dependency (R=0.33)
+### SI Figure 1: Relationship between endowment size and endowment dependency (R=0.33)
 ```{r ED_ES}
-ggscatter(ed_data, x = "Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year", y ="Endowment_dependency",  
+SI1 <- ggscatter(ed_data, x = "Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year", y ="Endowment_dependency",  
           add = "reg.line", conf.int = TRUE, 
           cor.coef = TRUE, cor.method = "pearson",
           xlab = "Endowment Size (Billions of USD)" , ylab ="Endowment dependency")
 
 print(paste0("SI Figure 1. Relationship Between Endowment Size and Dependence (n=", count(ed_data)
 , "). Correlation coefficient = 0.33"))
+
+ggsave(filename =  "Barron23FigSI1_EDESRelationship.jpeg", SI1, height = 4, width = 6, units = "in", dpi = 600)
+
+
 ```
 ## Linear ED vs ES: Endowment size (billions USD) 
 ```{r mod_ed_es}
@@ -1339,6 +1347,7 @@ print(paste0(round(x*100,1),"% of U.S. HEIs (",total_nschools, " of which we can
 print(paste0("Collectively these schools represent ", round(ZZ,1),"% of total endowment value."))
 
 ```
+Over 99% of 4-year HEIs representing roughly 956% of endowment value are less dependent upon their endowment than at least one recently divested HEI, suggesting that large endowment or high dependence on endowment are no longer strict barriers to fossil fuel divestment for most schools. 
 
 ### % schools with high endowment dependence >0.66 represent 95% of total endowment value. At the same time schools with very high dependence on endowments, which now represent only roughly 0.4% of schools and 5% of endowment value
 ```{r}
@@ -1374,7 +1383,7 @@ Z<- (div_data_2016$Cumulative.Count.Rej - div_data_2016$Cumulative.Count.Div)/di
 
 print(paste0("Institutional rejections of FFD rose even more rapidly than divestments and represented ",round(Z*100, 1) ,"% more institutions by 2016."))
 ```
-### Figure 1 caption: 132 divesting schools (all forms of FFD), 125 fully divested, and 57 rejected by 2023 Q1
+### Figure 1 caption
 ```{r div_data_2022}
 div_data_2022<-div_rej_data%>%
   filter(Quarters=="2023 Q1")

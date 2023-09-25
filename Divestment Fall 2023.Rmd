@@ -770,7 +770,7 @@ ggsave("Bubble Chart Post 2018_no ST annotate_no family_2.5.png", bubble8, width
 aligned_div_risk<-plot_grid(bubble7, bubble8, labels = c('(a)', '(b)'), align = "h" )
 aligned_div_risk
 
-ggsave(filename =  "Barron23Fig4_DivRisks.jpeg", aligned_div_risk, height = 5, width = 10, units = "in", dpi = 300)
+ggsave(filename =  "Barron23Fig4_DivRisks.jpeg", aligned_div_risk, height = 5, width = 10, units = "in", dpi = 600)
 
 ```
 

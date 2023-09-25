@@ -22,6 +22,7 @@ library(ggrepel)
 library(ggpubr)
 library(lmtest)
 library(stargazer)
+#install.packages("showtext")
 library(showtext)
 
 ```
@@ -749,8 +750,10 @@ legend.box.background = element_rect(color="black", size=0.5))
 
 #Move Yale Fossil Fuel Exposure from 0 to 2.6 in 2021, add geom_point. Divestment announcement impacted the holdings 
 #For Yale University to show in unbolded fontface, please install.packages("showtext") and run the next two lines. Running the next two lines with the whole rmd will repel all text and label size to size 3.  
-#showtext_auto()
-#bubble8 + annotate(geom="text", , x=33, y=2.9, label="Yale University",family = "Serif", cex=3)
+#install.packages("showtext")
+library(showtext)
+showtext_auto()
+bubble8 <- bubble8 + annotate(geom="text", x=33, y=2.9, label="Yale University",family = "Serif", cex=3)
 
 bubble8
 
@@ -1173,10 +1176,13 @@ summary(es_logit)
 #For use in Shifts in ED
 ed_logit <- glm(Divested ~ Endowment_dependency, data = ed_test, family = "binomial")
 summary(ed_logit)
-
+```
+```{r}
 exp(coefficients(ed_logit))
 exp(confint(ed_logit))
+
 ```
+
 ```{r ed_logit plot}
 ggplot(ed_test, aes(x=Endowment_dependency, y=Divested)) + geom_point() +
       stat_smooth(method="glm", color="green", se=FALSE,

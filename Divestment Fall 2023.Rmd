@@ -22,7 +22,7 @@ library(ggrepel)
 library(ggpubr)
 library(lmtest)
 library(stargazer)
-
+library(lubridate)
 ```
  
 ```{r import}
@@ -36,7 +36,7 @@ f_f1a_datax <- read.csv("f_f1a(public) 2020.csv")
 f_f2_datax <- read.csv("f_f2(private) 2020.csv")
 
 # The "divested" and "rejected" datasets were created based off of data on fossil fuel divestment decisions gathered by Smith College. 
-divestedx <- read.csv ("Divested Institutions Spring 2023_final.csv")
+divestedx <- read.csv ("Trial data file 10 15 23.csv")
 rejectedx <- read.csv("Rejected Institutions Spring 2022.csv")
 rejected_detailsx <- read.csv("Rejections_data Spring 2022_final.csv")
 ```
@@ -178,13 +178,13 @@ identical(count(ed_data_null), count(merged_data_2020)-count(reversed_data))
 #Divested schools 
 # Identify relevant subset of data
 # Endowment amount used is most recent figure, eventually may want to recode to find the endowment amount at the time of the divestment decision
-
 div_data <- merged_data[which(merged_data$ACAD_YEAR == 2020 & merged_data$Divested.== "Yes"),]
 ```
+
 ```{r diff_div}
 #div_data losing 6 schools from divestedx - this represents 2 year colleges and one closed school (GMC) 
 print("These schools are in mannually compiled divestedx but not in div_data")
-diff_div<-setdiff(divestedx$School.Name, div_data$School.Name)
+diff_div<-setdiff(divestedx$School.Name, div_data$INSTITUTION.NAME)
 diff_div
 ```
 
@@ -284,7 +284,7 @@ blanks <- read_excel("blanks.xlsx")
 
 #div_data2 has UNITID and Divestment Quarter. 
 div_data2 <- inner_join(div_data, blanks, by = "UNITID") %>%
-  select(UNITID, Quarter, everything()) %>%
+  select(UNITID,INSTITUTION.NAME,Date,Quarter.Change,ChangeDate,Change.of.Type,  Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year,Endowment_dependency,Fossil.Fuel.Exposure,Divested.,TypeOfDivestmentOrig,Type.of.Divestment,Language, School.Name) %>%
   filter(UNITID != "161086")
 ```
 
@@ -591,13 +591,13 @@ div_rej_data <- left_join(div_rej_data, full_bar_data, by = "Quarters")
 ### Figure 1 & 2: Line graph for divestment only ($), divestment/rejections ($), divestment/rejections (#)
 ```{r line to line4}
 # Line graph for divestment only ($)
-line = ggplot(div_rej_data, aes(div_rej_data$Quarters)) + geom_line(aes(x=div_rej_data$Quarters, y=div_rej_data$Amount.Divested, color="Divested"), size = 1.5, group=1) + ylim(0,255)+labs(x="Year", y="Cumulative endowment value (Billions USD)", color="Divested/rejected") + theme_bw() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5)) + ylim(0, 253) + scale_color_manual(values=c("indianred1")) + scale_x_discrete(breaks=c("2013 Q1", "2014 Q1", "2015 Q1", "2016 Q1", "2017 Q1", "2018 Q1", "2019 Q1", "2020 Q1", "2021 Q1","2022 Q1","2023 Q1"), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021","2022","2023"))
+line = ggplot(div_rej_data, aes(div_rej_data$Quarters)) + geom_line(aes(x=div_rej_data$Quarters, y=div_rej_data$Amount.Divested, color="Divested"), size = 1.5, group=1) + ylim(0,300)+labs(x="Year", y="Cumulative endowment value (Billions USD)", color="Divested/rejected") + theme_bw() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5)) + ylim(0, 253) + scale_color_manual(values=c("indianred1")) + scale_x_discrete(breaks=c("2013 Q1", "2014 Q1", "2015 Q1", "2016 Q1", "2017 Q1", "2018 Q1", "2019 Q1", "2020 Q1", "2021 Q1","2022 Q1","2023 Q1"), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021","2022","2023"))
 
 line
 
 # Line graph for divestment/rejections ($)
 line2 = ggplot(div_rej_data ,aes(div_rej_data$Quarters)) + geom_line(aes(x=div_rej_data$Quarters, y=div_rej_data$Amount.Divested, color="Divested"), size = 1.5, group = 1) + geom_line(aes(x= div_rej_data$Quarters, y=div_rej_data$Amount.Rejected, color="Rejected"), size = 1.5, group = 1) +
-geom_line(aes(x=div_rej_data$Quarters, y = div_rej_data$Amount.Fully.Divested, color="Fully divested"), size = 1.5, group = 1) + labs(x="Year", y= "Cumulative endowment value (Billions USD)", color="Divested/rejected") + theme_bw() + theme(axis.text.x = element_text(hjust=1), plot.title=element_text(hjust=0.5)) + ylim(0, 255) + scale_color_manual(values=c("indianred1", "royalblue3", "black")) + scale_x_discrete(breaks=c("2013 Q1", "2014 Q1", "2015 Q1", "2016 Q1", "2017 Q1", "2018 Q1", "2019 Q1", "2020 Q1", "2021 Q1","2022 Q1","2023 Q1"), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021","2022","2023"))+
+geom_line(aes(x=div_rej_data$Quarters, y = div_rej_data$Amount.Fully.Divested, color="Fully divested"), size = 1.5, group = 1) + labs(x="Year", y= "Cumulative endowment value (Billions USD)", color="Divested/rejected") + theme_bw() + theme(axis.text.x = element_text(hjust=1), plot.title=element_text(hjust=0.5)) + ylim(0, 300) + scale_color_manual(values=c("indianred1", "royalblue3", "black")) + scale_x_discrete(breaks=c("2013 Q1", "2014 Q1", "2015 Q1", "2016 Q1", "2017 Q1", "2018 Q1", "2019 Q1", "2020 Q1", "2021 Q1","2022 Q1","2023 Q1"), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021","2022","2023"))+
   theme(legend.position = c(0.89, 0.15), legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black")) +     theme(axis.title=element_text(size=8))
 
 
@@ -605,7 +605,7 @@ line2
 
 line3 = ggplot(div_rej_data ,aes(div_rej_data$Quarters)) + geom_line(aes(x=div_rej_data$Quarters, y=div_rej_data$Cumulative.Count.Div, color="Divested"), size = 1.5, group = 1) +
 #+ ggtitle("Institutional Divestment Decisions") 
-labs(x="Year", y= "Number of institutions", color="Divested/Rejected") + theme_bw() + theme(axis.text.x = element_text(hjust=1), plot.title=element_text(hjust=0.5)) +ylim(0,255)+ scale_color_manual(values=c("indianred1")) + scale_x_discrete(breaks=c("2013 Q1", "2014 Q1", "2015 Q1", "2016 Q1", "2017 Q1", "2018 Q1", "2019 Q1", "2020 Q1", "2021 Q1","2022 Q1","2023 Q1"), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021","2022","2023"))+
+labs(x="Year", y= "Number of institutions", color="Divested/Rejected") + theme_bw() + theme(axis.text.x = element_text(hjust=1), plot.title=element_text(hjust=0.5)) +ylim(0,300)+ scale_color_manual(values=c("indianred1")) + scale_x_discrete(breaks=c("2013 Q1", "2014 Q1", "2015 Q1", "2016 Q1", "2017 Q1", "2018 Q1", "2019 Q1", "2020 Q1", "2021 Q1","2022 Q1","2023 Q1"), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021","2022","2023"))+
   theme(legend.position = c(0.89, 0.15), legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black"))
 
 line3
@@ -694,33 +694,83 @@ bubble6
 ```
 
 ### Figure 4a: Endowment dependency vs fossil fuel exposure 2012-2017 
+```{r bubble_data}
+# Bubble charts are made with limited data of fossil fuel exposure (replicating a chart previously made by Smith College)
+# Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year is used to evaluate endowment as this is the variable used to calculate endowment dependency above
+
+
+bubble_data <- div_data
+
+#ensure partials are lumped with intermediate
+bubble_data <- bubble_data %>% mutate(TypeOfDivestmentOrig=str_replace_all(TypeOfDivestmentOrig,'Partial','Intermediate')) %>%
+mutate(TypeOfDivestmentOrig=str_replace_all(TypeOfDivestmentOrig,'Intermediate ','Intermediate'))
+
+#order as factors
+bubble_data$Type.of.Divestment <- factor(bubble_data$Type.of.Divestment, levels = c("Coal only", "Coal and tar sands only", "Intermediate", "Full"))
+bubble_data$TypeOfDivestmentOrig <- factor(bubble_data$TypeOfDivestmentOrig, levels = c("Coal only", "Coal and tar sands only", "Intermediate", "Full"))
+
+# Convert endowment dependency to percent for consistency in axes
+bubble_data$Endowment_dependency <- bubble_data$Endowment_dependency * 100
+#force princeton ED to 66%
+bubble_data$Endowment_dependency <- ifelse(bubble_data$School.Name=="Princeton University", 66, bubble_data$Endowment_dependency)
+#force princeton FF to 4.5 (not necessary fix this later Jane)
+bubble_data$Fossil.Fuel.Exposure <- ifelse(bubble_data$School.Name == "Princeton University", 4.5, bubble_data$Fossil.Fuel.Exposure)
+#Create labels for schools with full divestment and endowment dependency > 9 % 
+bubble_data <- bubble_data %>%
+  mutate(label_data = ifelse(bubble_data$Endowment_dependency>9|TypeOfDivestmentOrig!="Full", School.Name, ""))
+```
+
+### Figure 4a: Endowment dependency vs fossil fuel exposure 2012-2017 
+```{r bubble_data}
+# Bubble charts are made with limited data of fossil fuel exposure (replicating a chart previously made by Smith College)
+# Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year is used to evaluate endowment as this is the variable used to calculate endowment dependency above
+
+
+bubble_data <- div_data
+
+#ensure partials are lumped with intermediate
+bubble_data <- bubble_data %>% mutate(TypeOfDivestmentOrig=str_replace_all(TypeOfDivestmentOrig,'Partial','Intermediate')) %>%
+mutate(TypeOfDivestmentOrig=str_replace_all(TypeOfDivestmentOrig,'Intermediate ','Intermediate'))
+
+#order as factors
+bubble_data$Type.of.Divestment <- factor(bubble_data$Type.of.Divestment, levels = c("Coal only", "Coal and tar sands only", "Intermediate", "Full"))
+bubble_data$TypeOfDivestmentOrig <- factor(bubble_data$TypeOfDivestmentOrig, levels = c("Coal only", "Coal and tar sands only", "Intermediate", "Full"))
+
+# Convert endowment dependency to percent for consistency in axes
+bubble_data$Endowment_dependency <- bubble_data$Endowment_dependency * 100
+#force princeton ED to 66%
+bubble_data$Endowment_dependency <- ifelse(bubble_data$School.Name=="Princeton University", 66, bubble_data$Endowment_dependency)
+#force princeton FF to 4.5 (not necessary fix this later Jane)
+bubble_data$Fossil.Fuel.Exposure <- ifelse(bubble_data$School.Name == "Princeton University", 4.5, bubble_data$Fossil.Fuel.Exposure)
+#Create labels for schools with full divestment and endowment dependency > 9 % 
+bubble_data <- bubble_data %>%
+  mutate(label_data = ifelse(bubble_data$Endowment_dependency>9|TypeOfDivestmentOrig!="Full", School.Name, ""))
+```
+
+### Figure 4a: Endowment dependency vs fossil fuel exposure 2012-2017 
 ```{r bubbledatapre2018 to bubble7}
 bubbledatapre2018 <- bubble_data %>%
-  filter(substr(Quarter, 0, 4) == "2017" | substr(Quarter, 0, 4) == "2016" | substr(Quarter, 0, 4) == "2015" | substr(Quarter, 0, 4) == "2014" | substr(Quarter, 0, 4) == "2013" | substr(Quarter, 0, 4) == "2012" | substr(Quarter, 0, 4) == "2011")%>%
-    mutate(label_data_2 = ifelse(Type.of.Divestment!="Full", INSTITUTION.NAME, ""))
+  filter(substr(Quarter, 0, 4) == "2017" | substr(Quarter, 0, 4) == "2016" | substr(Quarter, 0, 4) == "2015" | substr(Quarter, 0, 4) == "2014" | substr(Quarter, 0, 4) == "2013" | substr(Quarter, 0, 4) == "2012" | substr(Quarter, 0, 4) == "2011") %>%    mutate(label_data_2 = ifelse(TypeOfDivestmentOrig!="Full", INSTITUTION.NAME, ""))
 
-bubble7 <- ggplot(bubbledatapre2018) + geom_point(aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment) , alpha = 0.75) +   scale_color_manual(values=c("#E69F00","#7fff00","#00994C")) + labs(x="Endowment dependence", y= "Fossil fuel exposure", color= "Type of divestment", size = "Value of endowment (billions USD)") + ggtitle("2012-2017") + theme(plot.title = element_text(hjust=0.5)) + xlim(0, 70) + ylim(-0.5,10.5) + scale_size_continuous(range = c(2,8))+ 
+bubble4a <- ggplot(bubbledatapre2018) + geom_point(aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=TypeOfDivestmentOrig) , alpha = 0.75) +    scale_color_manual(values=c("#E69F00","#F0E442","#7fff00", "#00994C")) + labs(x="Endowment dependence", y= "Fossil fuel exposure", color= "Type of divestment", size = "Value of endowment (billions USD)") + ggtitle("2012-2017") + theme(plot.title = element_text(hjust=0.5)) + xlim(0, 70) + ylim(-0.5,10.5) + scale_size_continuous(range = c(2,8))+ 
   geom_text_repel(data = bubbledatapre2018, colour = "black", aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, label=label_data_2),size = 8/.pt, max.overlaps = 12, point.padding = 0.2, box.padding = .6, seed = 42, check_overlap = TRUE)+  theme_bw(base_size = 11)+
   theme(plot.title=element_text(hjust=0.5),
         legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black"),
         legend.box.background = element_blank(), 
-        legend.position = c(0.78, 0.74), 
+        legend.position = c(0.8, 0.65), 
         legend.title = element_text(size = 8), 
-        legend.text = element_text(size = 8), 
+        legend.text = element_text(size = 6), 
         legend.key.size = unit(0.5,"cm"),
         legend.box.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"))
 
-bubble7
+bubble4a <- bubble4a +   geom_point(alpha=0.7, aes(x=5.448683,y=3),colour="#E69F00", size=3.699979)
 
-#bubbledatapre2019 <- bubble_data %>%
-#  filter(substr(Quarter, 0, 4) == "2018" |substr(Quarter, 0, 4) == "2017" | substr(Quarter, 0, 4) == "2016" | substr(Quarter, 0, 4) == "2015" | substr(Quarter, 0, 4) == "2014" | substr(Quarter, 0, 4) == "2013" | substr(Quarter, 0, 4) == "2012" | substr(Quarter, 0, 4) == "2011")%>%
-#    mutate(label_data_2 = ifelse(Type.of.Divestment!="Full", INSTITUTION.NAME, ""))
 
-#bubble_pre2019 <- ggplot(bubbledatapre2019) + geom_point(aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment) , alpha = 0.75) +   scale_color_manual(values=c("#E69F00","#F0E442","#7fff00", "#00994C")) + labs(x="Endowment Dependency", y= "Fossil Fuel Exposure", color= "Type of Divestment", size = "Value of Endowment (Billions USD)") + ggtitle("Divestment Risk (2012-2018)") + theme(plot.title = element_text(hjust=0.5)) + xlim(0, 65) + ylim(-0.5,10.5) + scale_size_continuous(range = c(2,8))+ 
-#  geom_text_repel(data = bubbledatapre2018, colour = "black", aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, label=label_data_2),size = 8.4/.pt, max.overlaps = 1000, point.padding = 0.1, box.padding = .6,seed = 42, check_overlap = TRUE)+  theme_bw(base_size = 11)+theme(plot.title=element_text(hjust=0.5))
+bubble4a
 
-#bubble_pre2019
+
 ```
+
 ### Figure 4b: Endowment dependency vs fossil fuel exposure 2018-2022 
 ```{r bubbledatapost2018}
 bubbledatapost2018 <- bubble_data %>% 
@@ -729,7 +779,7 @@ bubbledatapost2018 <- bubble_data %>%
 
 
 # Graph 2018-2022
-bubble8 <- ggplot(bubbledatapost2018) + 
+bubble4b <- ggplot(bubbledatapost2018) + 
   geom_point(alpha=0.7, aes(x=35.64197926,y=2.6, size=31.201686000),colour="#7fff00") + 
 geom_point(alpha = 0.75, aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure,
                                size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment)) +
@@ -737,24 +787,23 @@ geom_point(alpha = 0.75, aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure,
   labs(x="Endowment dependence", y= "Fossil fuel exposure", size = "Value of endowment (billions USD)", 
        color= "Type of divestment") + 
   ggtitle("2018-present") + 
-  theme(plot.title = element_text(hjust=0.5)) + xlim(0, 75) + ylim(0,10) + 
+  theme(plot.title = element_text(hjust=0.5)) + xlim(0, 75) + ylim(-0.5,10.5) + 
   scale_size_continuous(range = c(2,8)) + 
   geom_text_repel(data = bubbledatapost2018, colour = "black", 
                   aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, label=label_data_3), 
                   size = 8/.pt, max.overlaps=20, point.padding = 0.6, box.padding = .3, seed = 65, nudge_y =-0.6) + 
   theme_bw(base_size = 11)+ 
   theme(plot.title=element_text(hjust=0.6), legend.position = "none", legend.box.margin = margin(0.2, 0.2, 0.2, 0.2, "cm"),
-legend.box.background = element_rect(color="black", size=0.5))
-
+legend.box.background = element_rect(color="black", size=0.5))                                    
 
 #Move Yale Fossil Fuel Exposure from 0 to 2.6 in 2021, add geom_point. Divestment announcement impacted the holdings 
-#For Yale University to show in unbolded fontface
+#For Yale University to show in unbolded fontface, please install.packages("showtext") and run the next two lines. Running the next two lines with the whole rmd will repel all text and label size to size 3.  
+#showtext_auto(). , family = "serif)
+bubble4b <- bubble4b + annotate(geom="text", x=33, y=2.9, label="Yale University",cex=2.9)
 
-bubble8 <- bubble8 + annotate(geom="text", x=33, y=2.9, label="Yale University",cex=2.9)
+bubble4b
 
-bubble8
-
-ggsave("Bubble Chart Post 2018_no ST annotate_no family_2.5.png", bubble8, width = 9, height = 6, units = "in", dpi = 600)
+ggsave("Bubble Chart Post 2018_no ST annotate_no family_2.5.png", bubble4b, width = 9, height = 6, units = "in", dpi = 600)
 
 #bubbledatapost_post2019<- bubble_data %>% 
 #  filter(substr(Quarter, 0, 4) == "2019" | substr(Quarter, 0, 4) == "2020" | substr(Quarter, 0, 4) == "2021" | substr(Quarter, 0, 4) == "2022") %>%
@@ -767,10 +816,10 @@ ggsave("Bubble Chart Post 2018_no ST annotate_no family_2.5.png", bubble8, width
 #bubble_post2019
 ```
 ```{r}
-aligned_div_risk<-plot_grid(bubble7, bubble8, labels = c('(a)', '(b)'), align = "h" )
+aligned_div_risk<-plot_grid(bubble4a, bubble4b, labels = c('(a)', '(b)'), align = "h" )
 aligned_div_risk
 
-ggsave(filename =  "Barron23Fig4_DivRisks.jpeg", aligned_div_risk, height = 5, width = 10, units = "in", dpi = 600)
+ggsave(filename =  "Barron23Fig4_DivRisks.jpeg", aligned_div_risk, height = 5, width = 11, units = "in", dpi = 600)
 
 ```
 
@@ -786,7 +835,7 @@ print(paste0("For the subset of schools that reported fossil fuel share of endow
 ```{r bubble_data_all}
 # Graph using all data
 bubble_data_all<-bubble_data%>%
-  mutate(label_data_full = ifelse(bubble_data$Endowment_dependency>15|Type.of.Divestment!="Full" | Fossil.Fuel.Exposure>7, INSTITUTION.NAME, ""))
+  mutate(label_data_full = ifelse(bubble_data$Endowment_dependency>15|TypeOfDivestmentOrig!="Full" | Fossil.Fuel.Exposure>7, INSTITUTION.NAME, ""))
 
 bubble6 <- ggplot(bubble_data_all) + 
   geom_point(alpha = 0.75,aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment)) + 
@@ -802,22 +851,54 @@ bubble6
 ## Endowment Dependency vs Type of divestment 
 ### Figure 3: Endowment dependency of divested institutions 
 ```{r endowdepend6}
+# Extract years from the dates
+div_data2$Date<- as.Date(div_data2$Date) 
+div_data2$ChangeDate<- as.Date(div_data2$ChangeDate) 
+
 div_data2$Endowment_dependency <- ifelse(div_data2$INSTITUTION.NAME== "Princeton University", .66, div_data$Endowment_dependency)
 
 div_data2<-div_data2%>%
-    mutate(label_data_3 = ifelse(Type.of.Divestment!="Full" | Endowment_dependency>0.15, INSTITUTION.NAME, ""))
+    mutate(label_data_3 = ifelse(TypeOfDivestmentOrig!="Full" | Endowment_dependency>0.15, INSTITUTION.NAME, ""))
 
-endowdepend6 = ggplot(div_data2 ,aes(x = ContinuousQuarter, y = Endowment_dependency, color=Type.of.Divestment) ,alpha = 0.75)+ 
- scale_x_continuous(breaks=c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022,2023), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022","2023")) + 
-  geom_point() + scale_shape_manual(values = c(4, 3, 21, 8, 7)) + labs(x="Year", y= "Endowment dependence") + theme_bw() + theme(plot.title = element_text(hjust=0.5)) +
-  scale_color_manual(values=c("#E69F00","#F0E442","#00994C","#7fff00"))+geom_text_repel(data = div_data2, colour = "black", aes(x=ContinuousQuarter, y=Endowment_dependency, label=label_data_3),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5), legend.position = c(0.15, 0.8),legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black")) + labs(color='Type of divestment')
+endowdepend6 = ggplot(div_data2 ,aes(x = ChangeDate, y = Endowment_dependency, color=Type.of.Divestment) ,alpha = 0.75)+ geom_point() + scale_shape_manual(values = c(4, 3, 21, 8, 7)) + labs(x="Year", y= "Endowment dependence") + theme_bw()   + theme(plot.title = element_text(hjust=0.5)) +
+  scale_color_manual(values=c("#E69F00","#F0E442","#7fff00","#00994C"))+geom_text_repel(data = div_data2, colour = "black", aes(x=ChangeDate, y=Endowment_dependency, label=label_data_3),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5), legend.position = c(0.15, 0.8),legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black")) + labs(color='Type of divestment')
 
 
 endowdepend6
 
 ggsave(filename =  "Barron23Fig3_EndowmentDependencyDiv.jpeg", endowdepend6, height = 4, width = 8, units = "in", dpi = 600)
 
+endowdepend7 = ggplot(div_data2 ,aes(x = Date, y = Endowment_dependency, color=TypeOfDivestmentOrig) ,alpha = 0.75)+ 
+  geom_point() +labs(x="Year", y= "Endowment dependence") + theme_bw() + theme(plot.title = element_text(hjust=0.5)) +
+  scale_color_manual(values=c("#F0E442","#E69F00","#00994C","#7fff00"))+geom_text_repel(data = div_data2, colour = "black", aes(x=Date, y=Endowment_dependency, label=label_data_3),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5), legend.position = c(0.15, 0.8),legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black")) + labs(color='Type of divestment')
+
+  endowdepend7
+  
+
+
+ggsave(filename =  "Barron23Fig3.5_EndowmentDependencyDivOrg.jpeg", endowdepend7, height = 4, width = 8, units = "in", dpi = 600)
+
 ```
+
+```{r}
+# make a new dataset which duplicates the original dataset but change the date to original date if change.of.type = yes 
+div_data3<- div_data2 %>% filter(Change.of.Type == "Yes") %>%
+              mutate(DateFinal = Date,  DivFinal=TypeOfDivestmentOrig)
+#combine div_data2 and div_data3 so that schools that changed divestment status appears twice
+new_div_data2 <- div_data2 %>%
+  mutate(DateFinal = ChangeDate, DivFinal = Type.of.Divestment)%>%
+  bind_rows(div_data3)%>%
+  select(INSTITUTION.NAME, DateFinal,DivFinal,Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year,Endowment_dependency,label_data_3)
+
+endowdepend8 = ggplot(new_div_data2 ,aes(x = DateFinal, y = Endowment_dependency, color=DivFinal) ,alpha = 0.75)+ 
+  geom_point() +labs(x="Year", y= "Endowment dependence") + theme_bw() + theme(plot.title = element_text(hjust=0.5)) +
+  scale_color_manual(values=c("#F0E442","#E69F00","#00994C","#7fff00"))+geom_text_repel(data = new_div_data2, colour = "black", aes(x=DateFinal, y=Endowment_dependency, label=label_data_3),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5), legend.position = c(0.15, 0.8),legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black")) + labs(color='Type of divestment')
+
+  endowdepend8
+
+
+```
+
 ## Endowment size vs Type of Divestment 
 ```{r hist_data, include=FALSE, warning=FALSE}
 # Endowment size is measured by Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year
@@ -969,12 +1050,11 @@ for (i in ed_data$UNITID){
 div_data2$Endowment_dependency <- ifelse(div_data2$INSTITUTION.NAME== "Princeton University", .66, div_data$Endowment_dependency)
 
 div_data2<-div_data2%>%
-    mutate(label_data_3 = ifelse(Type.of.Divestment!="Full" | Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year>0, INSTITUTION.NAME, ""))
+    mutate(label_data_3 = ifelse(TypeOfDivestmentOrig!="Full" | Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year>0, INSTITUTION.NAME, ""))
 
-endowsize = ggplot(div_data2 ,aes(x = ContinuousQuarter, y = Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment) ,alpha = 0.75)+ 
- scale_x_continuous(breaks=c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022,2023), labels=c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022","2023")) + 
+endowsize = ggplot(div_data2 ,aes(x = ChangeDate, y = Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment) ,alpha = 0.75)+ 
   geom_point() + scale_shape_manual(values = c(4, 3, 21, 8, 7)) + labs(x="Year", y= "Value of Endowment (Billions USD)") + ggtitle("Endowment Size of Divested Institutions") + theme_bw() + theme(plot.title = element_text(hjust=0.5)) +
-  scale_color_manual(values=c("#E69F00","#F0E442","#00994C","#7fff00"))+geom_text_repel(data = div_data2, colour = "black", aes(x=ContinuousQuarter, y=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, label=label_data_3),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5)) + theme(plot.title = element_text(hjust=0.5), legend.position = c(0.15, 0.78),legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black"))+ labs(color='Type of divestment')
+  scale_color_manual(values=c("#E69F00","#F0E442","#00994C","#7fff00"))+geom_text_repel(data = div_data2, colour = "black", aes(x=ChangeDate, y=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, label=label_data_3),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5)) + theme(plot.title = element_text(hjust=0.5), legend.position = c(0.15, 0.78),legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black"))+ labs(color='Type of divestment')
 
 endowsize
 
@@ -1413,7 +1493,7 @@ print(paste0("Cumulative U.S. Higher Education Institutions Announcing Fossil Fu
 ### Endowment dependency of Whitman College 
 ```{r}
 div_data2_whitman<- div_data2%>%
-  filter(School.Name=="Whitman College")
+  filter(INSTITUTION.NAME=="Whitman College")
 whitman_dependency<- div_data2_whitman$Endowment_dependency
 Whitman<- whitman_dependency*100
 

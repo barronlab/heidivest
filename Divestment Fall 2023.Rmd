@@ -2,7 +2,7 @@
 ---
 title: "Divestment Analysis for Barron et al. 2023 Elementa"
 authors: "Rachel Venator, Jane Andrews, and Junwen Ding, Alex Barron advising"
-date: "2023-09-22"
+date: "2023-10-17"
 output: html_document
 ---
 ## Setup

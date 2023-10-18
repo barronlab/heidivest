@@ -37,7 +37,7 @@ f_f2_datax <- read.csv("f_f2(private) 2020.csv")
 
 # The "divested" and "rejected" datasets were created based off of data on fossil fuel divestment decisions gathered by Smith College. 
 
-divestedx <- read.csv ("Trial data file 10 15 23.csv")
+divestedx <- read.csv ("Trial data file 10 17 23.csv")
 rejectedx <- read.csv("Rejected Institutions Spring 2022.csv")
 rejected_detailsx <- read.csv("Rejections_data Spring 2022_final.csv")
 ```
@@ -148,7 +148,7 @@ library(readr)
 four_year_institutions <- read_csv("Private-not-for-profit and public 4-year-institution name list.csv")
 
 merged_data_2020 <- merged_data[which(merged_data$ACAD_YEAR == 2020),]
-#Filter out the community colleges from merged_data_2020, there are 1988 schools 
+#Filter out the community colleges from merged_data_2020
 setdiff(merged_data_2020$INSTITUTION.NAME,four_year_institutions$`Institution Name`)
 
 merged_data_2020<-merged_data_2020%>%
@@ -163,8 +163,7 @@ private_count
 reversed_data<-merged_data_2020%>%
   filter(merged_data_2020$Reversed.Decision=="Yes")
 
-print(paste0("There are ",count(merged_data_2020)-count(reversed_data)," US institutions available in the sample dataset after excluding ", count(reversed_data), " double counts of reversed dec
-             isions"))
+print(paste0("There are ",count(merged_data_2020)-count(reversed_data)," US institutions available in the sample dataset after excluding ", count(reversed_data), " double counts of reversed decisions"))
 ```
 
 ```{r ed_data_null}
@@ -178,14 +177,14 @@ identical(count(ed_data_null), count(merged_data_2020)-count(reversed_data))
 ```{r div_data}
 #Divested schools 
 # Identify relevant subset of data
-# Endowment amount used is most recent figure, eventually may want to recode to find the endowment amount at the time of the divestment decision
+# Endowment amount used is 2020 IPEDS figure. 
 div_data <- merged_data[which(merged_data$ACAD_YEAR == 2020 & merged_data$Divested.== "Yes"),]
 ```
 
 ```{r diff_div}
 #div_data losing 6 schools from divestedx - this represents 2 year colleges and one closed school (GMC) 
 print("These schools are in mannually compiled divestedx but not in div_data")
-diff_div<-setdiff(divestedx$School.Name, div_data$INSTITUTION.NAME)
+diff_div<-setdiff(divestedx$UNITID, div_data$UNITID)
 diff_div
 ```
 
@@ -224,9 +223,9 @@ print(paste0("There are ", count(ES_NAs), " schools with endowment size NAs"))
 print(ES_NAs$INSTITUTION.NAME)
 ```
 
-#### All divested and rejected schools (#180) with no NAs in ED, ES, div status
+#### All divested and rejected schools (#183) with no NAs in ED, ES, div status
 ```{r ed_data_copy}
-# 180 schools with divestment status, endowment dependency and endowment size, no double counts 
+# schools with divestment status, endowment dependency and endowment size, no double counts 
 ed_data_copy <- ed_data%>%
   filter(!is.na(ed_data$Divested.))
 ```
@@ -243,7 +242,7 @@ div_bar_data <- data.frame()
 # n gives values for "Cumulative Count"
 n <- 0
 
-# a gives values for "Amount Divested"
+# a gives values for "Amount Associated with Schools that have Divested"
 a <- 0
 
 # For loop iterates through fiscal quarters from list qtrs
@@ -274,7 +273,7 @@ for (q in qtrs){
   }
   
   # Adds data for each fiscal quarter to dataframe 
-  div_bar_data2 <- data.frame("Cumulative Count"=n, "Quarters"=q, "Amount Divested" = a)
+  div_bar_data2 <- data.frame("Cumulative Count"=n, "Quarters"=q, "Amount.Divested" = a)
   div_bar_data <- bind_rows(div_bar_data, div_bar_data2, .id = NULL)
 }
 ```
@@ -287,6 +286,8 @@ blanks <- read_excel("blanks.xlsx")
 div_data2 <- inner_join(div_data, blanks, by = "UNITID") %>%
   select(UNITID,INSTITUTION.NAME,Date,Quarter.Change,ChangeDate,Change.of.Type,  Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year,Endowment_dependency,Fossil.Fuel.Exposure,Divested.,TypeOfDivestmentOrig,Type.of.Divestment,Language, School.Name) %>%
   filter(UNITID != "161086")
+
+#Filter for colby college no longer relevant.  Schools with shifts in investments but not policies not treated as taking divestment actions.
 ```
 
 ### Add column giving change in divestment per quarter
@@ -511,7 +512,7 @@ print(paste0("Figure 5: Reasons for rejection from U.S. HEI rejections of fossil
 
 
 ## Graph prep: Full divestment
-### Subset by full divestment and calculate # schools (125) fully divested from div_data
+### Subset by full divestment and calculate # schools fully divested from div_data
 ```{r full_div_data}
 # Subset by full divestment and calculate amount fully divested 
 # no double counts 
@@ -753,7 +754,7 @@ bubble_data <- bubble_data %>%
 bubbledatapre2018 <- bubble_data %>%
   filter(substr(Quarter, 0, 4) == "2017" | substr(Quarter, 0, 4) == "2016" | substr(Quarter, 0, 4) == "2015" | substr(Quarter, 0, 4) == "2014" | substr(Quarter, 0, 4) == "2013" | substr(Quarter, 0, 4) == "2012" | substr(Quarter, 0, 4) == "2011") %>%    mutate(label_data_2 = ifelse(Endowment_dependency>15 | Fossil.Fuel.Exposure>7.5, INSTITUTION.NAME, ""))
 
-bubble4a <- ggplot(bubbledatapre2018) + geom_point(aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=TypeOfDivestmentOrig) , alpha = 0.75) +    scale_color_manual(values=c("#E69F00","#F0E442","#7fff00", "#00994C")) + labs(x="Endowment dependence", y= "Fossil fuel exposure", color= "Type of divestment", size = "Value of endowment (billions USD)") + ggtitle("2012-2017") + theme(plot.title = element_text(hjust=0.5)) + xlim(0, 70) + ylim(-0.5,10.5) + scale_size_continuous(range = c(2,8))+ 
+bubble4a <- ggplot(bubbledatapre2018) + geom_point(aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=TypeOfDivestmentOrig) , alpha = 0.75) +    scale_color_manual(values=c("#E69F00","#F0E442","#7fff00", "#00994C")) + labs(x="Estimated endowment dependence", y= "Fossil fuel exposure", color= "Type of divestment", size = "Value of endowment (billions USD)") + ggtitle("2012-2017") + theme(plot.title = element_text(hjust=0.5)) + xlim(0, 70) + ylim(-0.5,10.5) + scale_size_continuous(range = c(2,8))+ 
   geom_text_repel(data = bubbledatapre2018, colour = "black", aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, label=label_data_2),size = 8/.pt, max.overlaps = 12, point.padding = 0.2, box.padding = .6, seed = 42, check_overlap = TRUE)+  theme_bw(base_size = 11)+
   theme(plot.title=element_text(hjust=0.5),
         legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black"),
@@ -776,7 +777,7 @@ bubble4a
 ```{r bubbledatapost2018}
 bubbledatapost2018 <- bubble_data %>% 
   filter(substr(Quarter, 0, 4) == "2018" | substr(Quarter, 0, 4) == "2019" | substr(Quarter, 0, 4) == "2020" | substr(Quarter, 0, 4) == "2021" | substr(Quarter, 0, 4) == "2022"| substr(Quarter, 0, 4) == "2023") %>%
-  mutate(label_data_3 = ifelse(Endowment_dependency>15, INSTITUTION.NAME, ""))
+  mutate(label_data_3 = ifelse(Endowment_dependency>13, INSTITUTION.NAME, ""))
 
 
 # Graph 2018-2022
@@ -785,7 +786,7 @@ bubble4b <- ggplot(bubbledatapost2018) +
 geom_point(alpha = 0.75, aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure,
                                size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment)) +
   scale_color_manual(values=c("#E69F00","#7fff00", "#00994C")) + theme_bw() + 
-  labs(x="Endowment dependence", y= "Fossil fuel exposure", size = "Value of endowment (billions USD)", 
+  labs(x="Estimated endowment dependence", y= "Fossil fuel exposure", size = "Value of endowment (billions USD)", 
        color= "Type of divestment") + 
   ggtitle("2018-present") + 
   theme(plot.title = element_text(hjust=0.5)) + xlim(0, 75) + ylim(-0.5,10.5) + 
@@ -826,10 +827,11 @@ ggsave(filename =  "Barron23Fig4_DivRisks.jpeg", aligned_div_risk, height = 5, w
 
 ### Highlight: Only XX of YY divesting schools reported fossil fuel exposure. 
 ```{r highlight}
-colSums(!is.na(bubble_data))
-print(paste0("Note that only 107  of 136 divesting schools reported fossil fuel exposure."))
-X<- 107/136
-print(paste0("For the subset of schools that reported fossil fuel share of endowment (",round(X*100, 1),"%)"))
+reporting <-colSums(!is.na(bubble_data))
+ffereport <- reporting[19]
+divreport <- reporting[21]
+print(paste0("Note that only ", ffereport  ," of ", divreport, " divesting schools reported fossil fuel exposure."))
+print(paste0("For the subset of schools that reported fossil fuel share of endowment (",round(ffereport/divreport*100, 1),"%)"))
 ```
 
 ### Unused bubble: Divestment risk 2012-present 

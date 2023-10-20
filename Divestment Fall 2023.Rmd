@@ -2,7 +2,7 @@
 ---
 title: "Divestment Analysis for Barron et al. 2023 Elementa"
 authors: "Rachel Venator, Jane Andrews, and Junwen Ding, Alex Barron advising"
-date: "2023-10-17"
+date: "2023-10-20"
 output: html_document
 ---
 ## Setup
@@ -37,7 +37,7 @@ f_f2_datax <- read.csv("f_f2(private) 2020.csv")
 
 # The "divested" and "rejected" datasets were created based off of data on fossil fuel divestment decisions gathered by Smith College. 
 
-divestedx <- read.csv ("Trial data file 10 17 23.csv")
+divestedx <- read.csv ("Trial data file 10 20 23.csv")
 rejectedx <- read.csv("Rejected Institutions Spring 2022.csv")
 rejected_detailsx <- read.csv("Rejections_data Spring 2022_final.csv")
 ```

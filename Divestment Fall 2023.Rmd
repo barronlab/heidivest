@@ -37,7 +37,7 @@ f_f2_datax <- read.csv("f_f2(private) 2020.csv")
 
 # The "divested" and "rejected" datasets were created based off of data on fossil fuel divestment decisions gathered by Smith College. 
 
-divestedx <- read.csv ("Trial data file 10 20 23.csv")
+divestedx <- read.csv ("Divested Institutions Fall 2023_final.csv")
 rejectedx <- read.csv("Rejected Institutions Spring 2022.csv")
 rejected_detailsx <- read.csv("Rejections_data Spring 2022_final.csv")
 ```
@@ -186,6 +186,8 @@ div_data <- merged_data[which(merged_data$ACAD_YEAR == 2020 & merged_data$Divest
 print("These schools are in mannually compiled divestedx but not in div_data")
 diff_div<-setdiff(divestedx$UNITID, div_data$UNITID)
 diff_div
+
+#Current output 230898 GMC 125170 BCC 108667 Alameda 117247 Laney 118772 Merrit 209746 PCC
 ```
 
 ```{r rejection}

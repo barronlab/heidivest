@@ -625,8 +625,8 @@ geom_line(aes(x=div_rej_data$Quarters, y = div_rej_data$Cumulative.Count.Full, c
 line4
 
 #Save figures 
-ggsave(filename =  "Barron23Fig1_CumEndowmentVal.jpeg", line2, height = 6, width = 9, units = "in", dpi = 600)
-ggsave(filename =  "Barron23Fig2_AllDecisions.jpeg", line4, height = 6, width = 9, units = "in", dpi = 600)
+ggsave(filename =  "Barron23Fig2_CumEndowmentVal.jpeg", line2, height = 6, width = 9, units = "in", dpi = 600)
+ggsave(filename =  "Barron23Fig1_AllDecisionsCumm.jpeg", line4, height = 6, width = 9, units = "in", dpi = 600)
 ```
 
 ### Figure 1 description: institutional rejections rose more rapidly than divestments by 2016 

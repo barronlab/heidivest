@@ -1204,17 +1204,18 @@ hist5
 
 ### Logit 2012-2022
 ```{r}
-#Endowment size as predictor
+#Endowment size as predictor - Endowment size on its own
 es_logit <- glm(Divested ~ Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, data = ed_test, family = "binomial")
 summary(es_logit)
 ```
 
 ```{r ed_logit}
-#For use in Shifts in ED
+#For reporting main regression in "Shifts in ED"
 ed_logit <- glm(Divested ~ Endowment_dependency, data = ed_test, family = "binomial")
 summary(ed_logit)
 ```
 ```{r}
+#For odds ratio and CI
 exp(coefficients(ed_logit))
 exp(confint(ed_logit))
 
@@ -1234,7 +1235,7 @@ ggplot(ed_test, aes(x=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.y
                 method.args = list(family=binomial))+labs(x="2012-2022 Endowment size", y="Divested")+ theme_bw()
 
 ```
-
+###Added to the model with ED
 ```{r ed_es_logit}
 #adding Endowment size to the model with ED
 ed_es_logit <- glm(Divested ~ Endowment_dependency+Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, data = ed_test, family = "binomial")
@@ -1436,11 +1437,6 @@ Y<- div_data_2022$Cumulative.Count.Rej
 print(paste0(X, " divesting schools (all forms of FFD), ", Z, " fully divesting schools, and ", Y, " rejecting schools by 2023 Q1"))
 ```
 
-#Q1 2016, there are 25% more rejected than divested schools
-```{r}
-(64-51)/51
-print(paste0("Q1 2016, there are 25% more rejected than divested schools"))
-```
 
 Cumulative U.S. Higher Education Institutions Announcing Fossil Fuel Divestment (or Rejecting Divestment) by Quarter. (n=X divesting schools (all forms of FFD), Z fully divesting schools, and y rejecting schools )
 
@@ -1470,9 +1466,3 @@ print(paste0("Note that only 106  of 132 divesting schools reported fossil fuel 
 X<- 106/132
 print(paste0("For the subset of schools that reported fossil fuel share of endowment (",round(X*100, 1),"%)"))
 ```
-
-```{r}
-testcommit <- c("string1", "string2", "string3")
-testcommit
-```
-

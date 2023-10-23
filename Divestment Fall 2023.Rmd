@@ -677,49 +677,6 @@ above10ed <- bubble_data %>%
   filter(Endowment_dependency >= 10)
 ```
 
-### Bubble chart for all schools 
-```{r bubble6}
-# The last color is used for the regression fit.
-bubble6 <- ggplot(bubble_data)+ 
-  geom_point(aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, color=Type.of.Divestment,
-                 size=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year), alpha = 0.75) +
-  scale_color_manual(values=c("#E69F00","#F0E442","#7fff00", "#00994C")) + 
-  labs(x="Endowment Dependency", y= "Fossil Fuel Exposure", color= "Type of Divestment", size = "Value of Endowment (Billions USD)") +
-  ggtitle("Divestment Risk (2012-Present)") + 
-  theme(plot.title = element_text(hjust=0.5)) + xlim(0, 70) + ylim(0,7) + 
-  scale_size_continuous(range = c(2,8))+  
-  geom_text_repel(data = bubble_data, colour = "black", aes(x=Endowment_dependency, y=Fossil.Fuel.Exposure, label=label_data),size = 8.4/.pt, max.overlaps = 1000, nudge_x =0.22, point.padding = 0.1, nudge_y =0.50, seed = 42, check_overlap = TRUE)+  theme_bw(base_size = 11)+theme(plot.title=element_text(hjust=0.5))+ theme(legend.position = c(0.8, 0.2)) 
-
-bubble6
-```
-
-### Figure 4a: Endowment dependency vs fossil fuel exposure 2012-2017 
-```{r bubble_data}
-# Bubble charts are made with limited data of fossil fuel exposure (replicating a chart previously made by Smith College)
-# Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year is used to evaluate endowment as this is the variable used to calculate endowment dependency above
-
-
-bubble_data <- div_data
-
-#ensure partials are lumped with intermediate
-bubble_data <- bubble_data %>% mutate(TypeOfDivestmentOrig=str_replace_all(TypeOfDivestmentOrig,'Partial','Intermediate')) %>%
-mutate(TypeOfDivestmentOrig=str_replace_all(TypeOfDivestmentOrig,'Intermediate ','Intermediate'))
-
-#order as factors
-bubble_data$Type.of.Divestment <- factor(bubble_data$Type.of.Divestment, levels = c("Coal only", "Coal and tar sands only", "Intermediate", "Full"))
-bubble_data$TypeOfDivestmentOrig <- factor(bubble_data$TypeOfDivestmentOrig, levels = c("Coal only", "Coal and tar sands only", "Intermediate", "Full"))
-
-# Convert endowment dependency to percent for consistency in axes
-bubble_data$Endowment_dependency <- bubble_data$Endowment_dependency * 100
-#force princeton ED to 66%
-bubble_data$Endowment_dependency <- ifelse(bubble_data$School.Name=="Princeton University", 66, bubble_data$Endowment_dependency)
-#force princeton FF to 4.5 (not necessary fix this later Jane)
-bubble_data$Fossil.Fuel.Exposure <- ifelse(bubble_data$School.Name == "Princeton University", 4.5, bubble_data$Fossil.Fuel.Exposure)
-#Create labels for schools with full divestment and endowment dependency > 9 % 
-bubble_data <- bubble_data %>%
-  mutate(label_data = ifelse(bubble_data$Endowment_dependency>9|TypeOfDivestmentOrig!="Full", School.Name, ""))
-```
-
 ### Figure 4a: Endowment dependency vs fossil fuel exposure 2012-2017 
 ```{r bubble_data}
 # Bubble charts are made with limited data of fossil fuel exposure (replicating a chart previously made by Smith College)

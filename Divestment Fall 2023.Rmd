@@ -497,7 +497,7 @@ bar_reasons
 ```
 ### Figure 5: Bar graph of top ten reasons for divestment rejection
 ```{r bar_reasons_10, echo=FALSE, warning=FALSE}
-# Data for top 10 reasons
+# Data for top 10 reasons1
 reasons <- reasons[order(reasons$percent),]
 reasons_10 <- top_n(reasons, 10, reasons$percent)
 
@@ -738,7 +738,7 @@ bubble4a
 ```{r bubbledatapost2018}
 bubbledatapost2018 <- bubble_data %>% 
   filter(substr(Quarter, 0, 4) == "2018" | substr(Quarter, 0, 4) == "2019" | substr(Quarter, 0, 4) == "2020" | substr(Quarter, 0, 4) == "2021" | substr(Quarter, 0, 4) == "2022"| substr(Quarter, 0, 4) == "2023") %>%
-  mutate(label_data_3 = ifelse(Endowment_dependency>13, INSTITUTION.NAME, ""))
+  mutate(label_data_3 = ifelse(Endowment_dependency>18, INSTITUTION.NAME, ""))
 
 
 # Graph 2018-2022

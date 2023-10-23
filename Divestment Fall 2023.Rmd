@@ -1009,12 +1009,12 @@ for (i in ed_data$UNITID){
 ```{r endowsize}
 div_data2$Endowment_dependency <- ifelse(div_data2$INSTITUTION.NAME== "Princeton University", .66, div_data$Endowment_dependency)
 
-div_data2<-div_data2%>%
-    mutate(label_data_3 = ifelse(TypeOfDivestmentOrig!="Full" | Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year>0, INSTITUTION.NAME, ""))
+new_div_data2<-new_div_data2%>%
+   mutate(label_data_4 = ifelse(Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year>5, INSTITUTION.NAME, ""))
 
-endowsize = ggplot(div_data2 ,aes(x = ChangeDate, y = Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=Type.of.Divestment) ,alpha = 0.75)+ 
+endowsize = ggplot(new_div_data2,aes(DateFinal , y = Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, color=DivFinal) ,alpha = 0.75)+ 
   geom_point() + scale_shape_manual(values = c(4, 3, 21, 8, 7)) + labs(x="Year", y= "Value of Endowment (Billions USD)") + ggtitle("Endowment Size of Divested Institutions") + theme_bw() + theme(plot.title = element_text(hjust=0.5)) +
-  scale_color_manual(values=c("#E69F00","#F0E442","#00994C","#7fff00"))+geom_text_repel(data = div_data2, colour = "black", aes(x=ChangeDate, y=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, label=label_data_3),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5)) + theme(plot.title = element_text(hjust=0.5), legend.position = c(0.15, 0.78),legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black"))+ labs(color='Type of divestment')
+  scale_color_manual(values=c("#E69F00","#F0E442","#00994C","#7fff00"))+geom_text_repel(data = new_div_data2, colour = "black", aes(x=DateFinal, y=Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, label=label_data_4),size = 5/.pt, max.overlaps = 10,seed = 42)+  theme_bw(base_size = 11)+theme(plot.title = element_text(hjust=0.5)) + theme(plot.title = element_text(hjust=0.5), legend.position = c(0.15, 0.78),legend.background = element_rect(fill="white", size=unit(0.3, "lines"), linetype = "solid", color = "black"))+ labs(color='Type of divestment')
 
 endowsize
 

@@ -5,9 +5,9 @@ Note: As of 9/19/23 Code runs with R Studio Version 2023.06.2+561 and R  4.3.1 -
 
 blanks.xlsx
 
-Divested Institutions Spring 2023.csv
+Divested Institutions Fall 2023 final.csv - contains divestment announcements, coded for initial divestment announcement, any change to announcement. Also includes investment status assigned by divestmentdatabase.org(not used in our analysis).
 
-Divestment Fall 2022.Rmd - Master rmd file for all calculations and figures.
+Divestment Fall 2023.Rmd - Master rmd file for all calculations and figures.
 
 Endowment dependency reported vs. calculated.xlsx
 

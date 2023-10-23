@@ -152,6 +152,7 @@ four_year_institutions <- read_csv("Private-not-for-profit and public 4-year-ins
 merged_data_2020 <- merged_data[which(merged_data$ACAD_YEAR == 2020),]
 #Filter out the community colleges from merged_data_2020
 setdiff(merged_data_2020$INSTITUTION.NAME,four_year_institutions$`Institution Name`)
+#Antioch U will show up due to name mismatch on 4year list
 
 merged_data_2020<-merged_data_2020%>%
   inner_join( four_year_institutions, by=c('UNITID'='UnitID'))
@@ -637,7 +638,7 @@ Z<- (div_data_2016$Cumulative.Count.Rej - div_data_2016$Cumulative.Count.Div)/di
 
 print(paste0("Institutional rejections of FFD rose even more rapidly than divestments and represented ",round(Z*100, 1) ,"% more institutions by 2016."))
 ```
-### Figure 1 caption: 134 divesting schools (all forms of FFD), 128 fully divested, and 72 rejected by 2023 Q1
+### Figure 1 caption: 138 divesting schools (all forms of FFD), 126 fully divested, and 55(72 max) rejected by 2023 Q1
 ```{r div_data_2022}
 div_data_2023<-div_rej_data%>%
   filter(Quarters=="2023 Q1")

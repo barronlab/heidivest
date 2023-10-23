@@ -57,6 +57,8 @@ colnames(f_f1a_datax2)[colnames(f_f1a_datax2) == "Hospital.services...Current.ye
 colnames(f_f1a_datax2)[colnames(f_f1a_datax2) == "Research...Current.year.total"] <- "Research.Total.amount"
 colnames(f_f1a_datax2)[colnames(f_f1a_datax2) == "Total.expenses.and.deductions...Current.year.total"] <- "Total.expenses.Total.amount"
 colnames(f_f1a_datax2)[colnames(f_f1a_datax2) == "Independent.operations...Current.year.total"] <- "Independent.operations.Total.Amount"
+f_f1a_datax2$Independent.operations.Total.Amount <- as.numeric(f_f1a_datax2$Independent.operations.Total.Amount)
+f_f1a_datax2$Research.Total.amount <- as.numeric(f_f1a_datax2$Research.Total.amount)
 # Check that classes of columns match
 f1ax <- lapply(f_f1a_datax2, class)
 f2x <- lapply(f_f2_datax2, class)

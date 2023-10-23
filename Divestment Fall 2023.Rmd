@@ -1,4 +1,3 @@
-
 ---
 title: "Divestment Analysis for Barron et al. 2023 Elementa"
 authors: "Rachel Venator, Jane Andrews, and Junwen Ding, Alex Barron advising"
@@ -289,7 +288,7 @@ blanks <- read_excel("blanks.xlsx")
 
 #div_data2 has UNITID and Divestment Quarter. 
 div_data2 <- inner_join(div_data, blanks, by = "UNITID") %>%
-  select(UNITID,INSTITUTION.NAME,Date,Quarter.Change,ChangeDate,Change.of.Type,  Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year,Endowment_dependency,Fossil.Fuel.Exposure,Divested.,TypeOfDivestmentOrig,Type.of.Divestment,Language, School.Name) %>%
+  select(UNITID,INSTITUTION.NAME,Date, Quarter.Change ,ChangeDate,Change.of.Type,  Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year,Endowment_dependency,Fossil.Fuel.Exposure,Divested.,TypeOfDivestmentOrig,Type.of.Divestment,Language, School.Name) %>%
   filter(UNITID != "161086")
 
 #Filter for colby college no longer relevant.  Schools with shifts in investments but not policies not treated as taking divestment actions.

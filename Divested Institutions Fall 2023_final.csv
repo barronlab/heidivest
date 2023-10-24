@@ -58,7 +58,7 @@ Quarter,Date,School Name,UNITID,Fossil Fuel Exposure,Divested?,TypeOfDivestmentO
 2015 Q4,2015/12/3,University of Massachusetts-Dartmouth,167987,0.1,Yes,Coal only,Yes,2016 Q1,2016/3/25,Intermediate,Full,
 2015 Q4,2015/12/3,University of Massachusetts-Lowell,166513,0.1,Yes,Coal only,Yes,2016 Q1,2016/3/25,Intermediate,Full,
 2016 Q1,2016/3/9,Pratt Institute,194578,2.73,Yes,Full,,,2016/3/9,Full,Full,
-2016 Q2,2016/4/12,Yale University,130794,0,Yes,Intermediate,,,2016/4/12,Intermediate,Partial,2.6
+2016 Q2,2016/4/12,Yale University,130794,0,Yes,Coal and tar sands only,Yes,2016 Q2,2016/4/12,Intermediate,Partial,2.6
 2016 Q2,2016/6/28,University of Maryland Eastern Shore,163338,7,Yes,Intermediate,Yes,2020 Q1,2020/2/1,Full,Full,
 2016 Q2,2016/6/28,University of Maryland Baltimore,163259,7,Yes,Intermediate,Yes,2020 Q1,2020/2/1,Full,Full,
 2016 Q2,2016/6/28,University of Maryland-Baltimore County,163268,7,Yes,Intermediate,Yes,2020 Q1,2020/2/1,Full,Full,

@@ -507,7 +507,7 @@ bar_reasons_10 <- ggplot(reasons_10, aes(reasons_10$names)) + geom_col(aes(y=rea
 
 bar_reasons_10
 
-ggsave(filename =  "Barron23Fig5_Reasons.jpeg", height = 4, width = 9, units = "in", dpi = 600)
+ggsave(filename =  "Barron23Fig5_Reasons.jpeg", height = 6, width = 9, units = "in", dpi = 600)
 ```
 ### Figure 5 sample size: Reasons for rejection from U.S. HEI rejections of fossil fuel divestment
 ```{r}
@@ -1207,7 +1207,6 @@ hist5
 es_logit <- glm(Divested ~ Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year, data = ed_test, family = "binomial")
 summary(es_logit)
 ```
-
 ```{r ed_logit}
 #For reporting main regression in "Shifts in ED"
 ed_logit <- glm(Divested ~ Endowment_dependency, data = ed_test, family = "binomial")
@@ -1390,18 +1389,20 @@ print(paste0(round(x*100,1),"% of U.S. HEIs (",total_nschools, " of which we can
 print(paste0("Collectively these schools represent ", round(ZZ,1),"% of total endowment value."))
 
 ```
-Over 99% of 4-year HEIs representing roughly 956% of endowment value are less dependent upon their endowment than at least one recently divested HEI, suggesting that large endowment or high dependence on endowment are no longer strict barriers to fossil fuel divestment for most schools. 
+Over 99% of 4-year HEIs representing roughly 95% of endowment value are less dependent upon their endowment than at least one recently divested HEI, suggesting that large endowment or high dependence on endowment are no longer strict barriers to fossil fuel divestment for most schools. 
 
-### % schools with high endowment dependence >0.66 represent 95% of total endowment value. At the same time schools with very high dependence on endowments, which now represent only roughly 0.4% of schools and 5% of endowment value
+### % schools with high endowment dependence >0.66 represent % of total endowment value. At the same time schools with very high dependence on endowments, which now represent only roughly % of schools and % of endowment value
 ```{r}
-ED_more_than_Priceton<-ed_data%>%
-  filter(ed_data$Endowment_dependency>=0.66)
+ED_less_than_Priceton<-ed_data%>%
+  filter(ed_data$Endowment_dependency<=0.66)
 
-ED_more_than_Priceton_value<-sum(ED_more_than_Priceton$Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year)
+ED_less_than_Priceton_value<-sum(ED_less_than_Priceton$Value.of.endowment.assets.at.the.beginning.of.the.fiscal.year)
 
-VV<-(ED_more_than_Priceton_value)/(total_value)
+percent_ED_less_than_princeton<-count(ED_less_than_Priceton)/count(ed_data)
 
-print(paste0("% schools with high endowment dependence >0.66 represent 96% of total endowment value. At the same time schools with very high dependence on endowments, which now represent only roughly ", round(100-99.6,1), "% of schools and ", round(VV*100,1), "% of total endowment value."))
+VV<-(ED_less_than_Priceton_value)/(total_value)
+
+print(paste0(round(percent_ED_less_than_princeton*100,1), "% of schools have an endowment dependency < 0.66. Collectively these schools represent ",round(VV*100,1), "% of total endowment value."))
 
 ```
 ### Swarthmore
@@ -1453,7 +1454,7 @@ div_data2_whitman<- div_data2%>%
 whitman_dependency<- div_data2_whitman$Endowment_dependency
 Whitman<- whitman_dependency*100
 
-print(paste0("No schools with an endowment dependence above 25% divested fully before Q3 2018 (Whitman College - ",round(Whitman*100, 1), "%)."))
+print(paste0("No schools with an endowment dependence above 25% divested fully before Q3 2018 (Whitman College - ",round(Whitman, 1), "%)."))
 
 ```
 Figure 4 Endowment dependence vs fossil fuel exposure of the endowment for schools which reported fossil fuel exposure, all shares in percent. Panel (a) shows divestment announcements 2012-2017, panel (b) shows announcements 2018 through 8/2022. Note that only [x] of [y] schools reported fossil fuel exposure.

@@ -3,7 +3,6 @@ Code, data, etc. for Barron et. al HEI Divestment research
 
 Note: As of 9/19/23 Code runs with R Studio Version 2023.06.2+561 and R  4.3.1 -- "Beagle Scouts" on Mac Computers.
 
-blanks.xlsx
 
 Divested Institutions Fall 2023 final.csv - contains divestment announcements, coded for initial divestment announcement, any change to announcement. Also includes investment status assigned by divestmentdatabase.org(not used in our analysis).
 
@@ -21,4 +20,6 @@ Private-not-for-profit and public 4-year-institution name list.csv - Codebook fo
 
 Rejected Institutions Spring 2022.csv - simplified list of HEIs publicly rejecting
 
-Rejections_data Spring 2022.csv - Full set of data for schools with rejections
+Rejections_data Spring 2022 final.csv - Full set of data for schools with rejections
+
+blanks.xlsx - in current version needs to be updated with IPEDS id's for all divesting schools.
